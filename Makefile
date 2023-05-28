@@ -2,6 +2,9 @@ LEXER = lexer
 PARSER = parser
 MAIN = main
 AST = ast
+EVALUATE = evaluate
+GAP = gap_buffer
+
 
 .PHONY: all clean
 
@@ -22,8 +25,8 @@ $(PARSER).cmo : $(PARSER).ml $(AST).cmi $(PARSER).cmi
 %.cmi %.cmo : %.ml
 	ocamlc -c $<
 
-$(MAIN): $(AST).cmo $(PARSER).cmo  $(LEXER).cmo  $(MAIN).cmo 
-	ocamlc -o $@ $^
+$(MAIN): $(AST).cmo $(PARSER).cmo  $(LEXER).cmo $(GAP).cmo $(EVALUATE).cmo  $(MAIN).cmo 
+	ocamlc -o $@ str.cma $^
 
 clean:
 	rm -f $(LEXER).ml $(PARSER).ml $(PARSER).mli *.cmi *.cmo $(MAIN)

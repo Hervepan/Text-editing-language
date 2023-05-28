@@ -5,11 +5,6 @@ type direction =
   |Left
 ;;
 
-type linetype =
-  |Bottom
-  |Global
-  |Linenumber of int
-;;
 
 type move =
   |Home
@@ -31,14 +26,14 @@ type command =
   |Substitute of string * string 
 ;;
 
-type line_commands =
-  |Line_commands of linetype * (command list)
+type line_command =
+  |Line_command of int * (command list)
 ;;
 
 let line_to_str = function 
-  |Linenumber(num)-> "On line " ^ string_of_int num
-  |Bottom -> "On last line "
-  |Global -> "On all the lines "
+  |(-2) -> "On all the lines " 
+  |(-1) -> "On last line "
+  |num -> "On line " ^ string_of_int num
 ;;
 
 let execute_to_str = function 
@@ -82,7 +77,7 @@ let rec print_commands = function
 ;;
 
 let print_linecommand = function  
-  |Line_commands(line,commands) -> 
+  |Line_command(line,commands) -> 
     let line_str = line_to_str line in 
       Printf.printf "%s \n" line_str ;
       print_commands(commands)

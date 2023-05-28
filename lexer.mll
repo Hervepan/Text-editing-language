@@ -2,7 +2,6 @@
   open Parser        (* The type token is defined in parser.mli *)
   open Ast
   open Printf
-  exception Eof
 }
 
 let digit = ['0'-'9']
@@ -17,13 +16,13 @@ rule read_token =
   parse
   | whitespace { read_token lexbuf }
   | ';' { SEMICOLON }
+  | ',' { COMMA }
   | ':' { COLON }
   | int as value { INT(int_of_string value) }
   | id as lxm 
     { match lxm with 
         |"insert" -> INSERT
-        |"BOTTOM" -> BOTTOM 
-        |"GLOBAL" ->  GLOBAL 
+        |"sub" ->  SUBTITUTE
         |"right"  -> DIRECTION(Right)
         |"left" ->  DIRECTION(Left)
         |"home" ->  MOVE(Home)
@@ -31,13 +30,13 @@ rule read_token =
         |"delete" ->  EXECUTE(Delete)
         |"copy" ->  EXECUTE(Copy)
         |"paste" ->  EXECUTE(Paste) 
-        |"sub" ->  SUBTITUTE
-        |_ -> raise (Failure ("Unknow keyword " ^ lxm ^ " or you forgot to close a double quote (please refer to the documentation)")) 
+        |"BOTTOM" -> INT(-1) 
+        |"GLOBAL" ->  INT(-2) 
+        |_ -> raise (Failure ("Unknow keyword " ^ lxm ^ "; or you forgot to close a double quote (please refer to the documentation)")) 
     }
   | '"'      { let string = read_string (Buffer.create 20) lexbuf in STRING(string)}
-  | newline { EOL }
-  | eof { exit 0 }
-  | _ { raise (Failure ("lexer - illegal character: " ^ Lexing.lexeme lexbuf)) }
+  | newline { read_token lexbuf }
+  | _ { raise (Failure( "Illegal token, please refer to the documentation:"))}
 
 and read_string buf = parse
   | '"' { Buffer.contents buf }
