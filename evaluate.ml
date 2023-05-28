@@ -107,6 +107,6 @@ let rec print_lines = function
   | [] -> ()  
   | head::tail -> 
     let (lineNumber,line) = head in 
-    Printf.printf "Line %d: %s \n" lineNumber line;
+    Printf.printf "%s \n" lineNumber line;
     print_lines tail  
 ;;
