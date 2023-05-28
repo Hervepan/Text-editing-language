@@ -18,7 +18,8 @@ let lastline filename =
   line_count
 ;;
 
-let rec get_linenumber lastline = function
+let rec get_linenumber lastline ast =
+  match ast with
   | [] -> []
   | Line_command (num, _) :: lcommands ->
     let rest = get_linenumber lastline lcommands in
@@ -30,7 +31,7 @@ let lineToEdit filename lineNumbers =
   let rec read_lines acc lineNumber =
     try
       let line = input_line file in
-      if List.mem lineNumber lineNumbers then
+      if (List.mem lineNumber lineNumbers) then
         read_lines ((lineNumber, line) :: acc) (lineNumber + 1)
       else
         read_lines acc (lineNumber + 1)
@@ -56,6 +57,13 @@ let updateLine lineToEdit number str =
   (number,str)::update 
 ;;
   
+let rec expand_ast lastline = function 
+  |[]->[]
+  |Line_command(-1,commands)::tl-> (List.init (lastline-1) (fun x -> Line_command(x+1,commands)))@tl 
+  |Line_command(-2,commands)::tl-> Line_command(lastline-1,commands)::tl
+  |hd::tl -> hd::(expand_ast lastline tl)
+;;
+
 let evaluate_command gap command = 
   match command with 
   |Insert(str)-> Gap_buffer.gap_insert gap str

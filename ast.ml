@@ -31,8 +31,8 @@ type line_command =
 ;;
 
 let line_to_str = function 
-  |(-2) -> "On all the lines " 
-  |(-1) -> "On last line "
+  |(-1) -> "On all the lines " 
+  |(-2) -> "On last line "
   |num -> "On line " ^ string_of_int num
 ;;
 

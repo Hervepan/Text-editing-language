@@ -8,9 +8,10 @@ let main() =
   let lexbuf = Lexing.from_channel stdin in
   let ast = Parser.main Lexer.read_token lexbuf in
   let last = Evaluate.lastline filename in 
-  let lineNumbers = Evaluate.get_linenumber last ast in 
+  let updated_ast = Evaluate.expand_ast last ast in
+  let lineNumbers = Evaluate.get_linenumber last updated_ast in 
   let lineToEdit = Evaluate.lineToEdit filename lineNumbers in 
-  let editedLine =  Evaluate.evaluate_ast lineToEdit ast [] in
+  let editedLine =  Evaluate.evaluate_ast lineToEdit updated_ast [] in
     Evaluate.print_lines editedLine;
     Printf.printf "\n" ;
 ;;

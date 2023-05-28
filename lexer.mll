@@ -30,8 +30,8 @@ rule read_token =
         |"delete" ->  EXECUTE(Delete)
         |"copy" ->  EXECUTE(Copy)
         |"paste" ->  EXECUTE(Paste) 
-        |"BOTTOM" -> INT(-1) 
-        |"GLOBAL" ->  INT(-2) 
+        |"BOTTOM" -> INT(-2) 
+        |"GLOBAL" ->  INT(-1) 
         |_ -> raise (Failure ("Unknow keyword " ^ lxm ^ "; or you forgot to close a double quote (please refer to the documentation)")) 
     }
   | '"'      { let string = read_string (Buffer.create 20) lexbuf in STRING(string)}
